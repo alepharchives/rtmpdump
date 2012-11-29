@@ -100,6 +100,8 @@ void AVreplace(AVal *src, const AVal *orig, const AVal *repl);
 
 static const AVal av_dquote = AVC("\"");
 static const AVal av_escdquote = AVC("\\\"");
+static const AVal av_LF = AVC("\n");
+static const AVal av_escLF = AVC("%0a");
 
 typedef struct
 {
@@ -595,6 +597,7 @@ ServeInvoke(STREAMING_SERVER *server, RTMP * r, RTMPPacket *packet, unsigned int
       uint32_t now;
       RTMPPacket pc = {0};
       AMFProp_GetString(AMF_GetProp(&obj, NULL, 3), &r->Link.playpath);
+      AVreplace(&r->Link.playpath, &av_LF, &av_escLF);
       /*
       r->Link.seekTime = AMFProp_GetNumber(AMF_GetProp(&obj, NULL, 4));
       if (obj.o_num > 5)
